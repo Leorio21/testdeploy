@@ -1,0 +1,53 @@
+model InvoiceStatus {
+  id              String        @id @default(cuid())
+  name            String
+  value           String
+  invoices        Invoice[]
+}
+
+model Invoice {
+  id              String        @id @default(cuid())
+  clientId        String
+  reference       String
+  createdAt       DateTime      @default(now())
+  payment_termId  String
+  workType        String
+  items           Item[]
+  total           Decimal
+  statusId        String
+  userId          String
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: NoAction)
+  status          InvoiceStatus @relation(fields: [statusId], references: [id], onDelete: NoAction)
+  payment_term    PaymentTerm   @relation(fields: [payment_termId], references: [id], onDelete: NoAction)
+  client          Client        @relation(fields: [clientId], references: [id], onDelete: NoAction)
+  }
+
+model Item {
+  id              String        @id @default(cuid())
+  invoiceId       String
+  name            String
+  quantity        Decimal
+  price           Decimal
+
+  invoice         Invoice       @relation(fields: [invoiceId], references: [id], onDelete: NoAction)
+}
+
+model SupplierInfo {
+  id              String      @id @default(cuid())
+  userId          String
+  name            String
+  address         String
+  cpl_address     String?
+  postal_code     String
+  city            String
+  country         String
+  user            User        @relation(fields: [userId], references: [id])
+}
+
+model PaymentTerm {
+  id              String      @id @default(cuid())
+  delay           Int
+  invoices        Invoice[]
+
+}

@@ -1,0 +1,11 @@
+model Client {
+  id              String        @id @default(cuid())
+  name            String
+  address         String
+  cpl_address     String?
+  postal_code     String
+  city            String
+  country         String
+  email           String
+  invoices        Invoice[]
+}
